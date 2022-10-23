@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 25.0.1703.8
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasySCP682", "EasySCP682\EasySCP682.csproj", "{BF6AC135-91B3-49ED-8590-7D4E2DE0C93C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BF6AC135-91B3-49ED-8590-7D4E2DE0C93C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF6AC135-91B3-49ED-8590-7D4E2DE0C93C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF6AC135-91B3-49ED-8590-7D4E2DE0C93C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF6AC135-91B3-49ED-8590-7D4E2DE0C93C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {365B223E-E4B0-439C-96F5-AC21F0BD3C03}
+	EndGlobalSection
+EndGlobal
