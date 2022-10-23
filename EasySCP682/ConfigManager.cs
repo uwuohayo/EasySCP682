@@ -12,6 +12,7 @@ namespace EasySCP682
         public static int EasySCP682_hp;
         public static int EasySCP682_cd;
         public static int EasySCP682_damage;
+        public static int EasySCP682_minPlayers;
 
         public static void registerCfg()
         {
@@ -21,6 +22,7 @@ namespace EasySCP682
             EasySCP682_hp = Plug.Config.GetInt("EasySCP682_hp", 10000, "hp for scp 682");
             EasySCP682_cd = Plug.Config.GetInt("EasySCP682_cd", 20, "cd for door break in seconds");
             EasySCP682_damage = Plug.Config.GetInt("EasySCP682_damage", 1000, "damage when scp 682 bite players");
+            EasySCP682_minPlayers = Plug.Config.GetInt("EasySCP682_minPlayers", 10, "min players to spawn scp 682");
         }
     }
 }

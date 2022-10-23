@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using EasySCP682;
 using Qurre;
 using Qurre.API;
@@ -74,10 +75,14 @@ namespace SCP682
             {
                 List<Player> list = (from x in Player.List where x.UserId != null && x.UserId != string.Empty && !x.Overwatch select x).ToList<Player>();
 
-                if (list.Count >= 10)
+                if (list.Count >= ConfigManager.EasySCP682_minPlayers)
                 {
-                    Player pl = list[Extensions.Random.Next(list.Count)];
-                    this.Spawn(pl);
+                    Random rnd = new Random();
+                    if (rnd.Next(1, 2) == 1)
+                    {
+                        Player pl = list[Extensions.Random.Next(list.Count)];
+                        this.Spawn(pl);
+                    }
                 }
             }
         }
@@ -88,7 +93,8 @@ namespace SCP682
             pl.Tag += pluginTag;
             pl.CustomInfo = ConfigManager.EasySCP682_info;
             pl.Ahp = 0;
-            pl.ShowHint("You are now SCP-682\nYou are the most dangerous object in the SCP Foundation\nBring chaos to this game!", 15);
+            pl.Scale = new UnityEngine.Vector3(1.2f, 1.2f, 1.2f);
+            pl.Broadcast("You are now <color=#FF60A9>SCP-682</color>\nYou are the most <color=#FF60A9>dangerous</color> object in the <color=#FF60A9>SCP Foundation</color>\nBring <color=#FF60A9>chaos</color> to this game!", 15);
         }
 
         private void Destroy(InteractDoorEvent ev)
@@ -101,7 +107,7 @@ namespace SCP682
                     this.LastBreak = DateTime.Now;
                 } else
                 {
-                    ev.Player.ShowHint("Wait "+ (DateTime.Now - this.LastBreak).TotalSeconds + " seconds to break the door", 2);
+                    ev.Player.ShowHint("Wait <color=#FF60A9>" + ConfigManager.EasySCP682_cd + "</color> seconds to break the door", 2);
                 }
             }
         }
@@ -109,7 +115,15 @@ namespace SCP682
         {
             if (ev.Attacker.Tag.Contains(pluginTag))
             {
-                ev.Amount = ConfigManager.EasySCP682_damage;
+                Random rnd = new Random();
+                int random = rnd.Next(1, 2);
+                if (random == 1)
+                {
+                    ev.Amount = ConfigManager.EasySCP682_damage;
+                } else
+                {
+                    ev.Amount = 99;
+                }
             }
         }
         private void Dead(DeadEvent ev)
