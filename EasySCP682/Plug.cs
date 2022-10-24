@@ -89,12 +89,10 @@ namespace SCP682
         }
         private void Spawn(Player pl)
         {
-            foreach (Player p in Player.List)
+            List<Player> sendAttention = (from p in Player.List where p.UserId != null && p.UserId != string.Empty && p != pl select p).ToList<Player>();
+            foreach(Player plr in sendAttention)
             {
-                if (p != pl)
-                {
-                    p.Broadcast("<color=red>ATTENTION!</color>\nSCP-682 has <color=#FF60A9>contaiment breached</color>\nEveryone evacuate <color=#FF60A9>immediately!</color>", 15);
-                }
+                plr.Broadcast("<color=red>ATTENTION!</color>\nSCP-682 has <color=#FF60A9>contaiment breached</color>\nEveryone evacuate <color=#FF60A9>immediately!</color>", 15);
             }
             Cassie.Send("ATTENTION TO ALL PERSONNEL . SCP 6 8 2 ESCAPE . ALL HELICOPTERS AND MOBILE TASK FORCES IMMEDIATELY MOVE FORWARD TO ALL GATES . PLEASE EVACUATE IMMEDIATELY", false, false, true);
             pl.Role = RoleType.Scp93989;
@@ -169,6 +167,7 @@ namespace SCP682
             {
                 ev.Prefix = "SCP682";
                 ev.Allowed = false;
+
                 try
                 {
                     Player player = Player.Get(ev.Args[0]);
@@ -180,15 +179,14 @@ namespace SCP682
                     else
                     {
                         ev.ReplyMessage = "Successfully";
-                        this.Spawn(player);
+                        Spawn(player);
                     }
-                }
-                catch
+                } catch(Exception ex)
                 {
-                    ev.Success = false;
-                    ev.ReplyMessage = "An error has occurred";
+                    Log.Error(ex.StackTrace);
+                }
                 }
             }
         }
     }
-}
+
