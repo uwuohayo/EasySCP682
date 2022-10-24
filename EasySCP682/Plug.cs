@@ -89,12 +89,13 @@ namespace SCP682
         }
         private void Spawn(Player pl)
         {
-            List<Player> sendAttention = (from p in Player.List where p.UserId != null && p.UserId != string.Empty && p != pl select p).ToList<Player>();
-            foreach(Player plr in sendAttention)
-            {
-                plr.Broadcast("<color=red>ATTENTION!</color>\nSCP-682 has <color=#FF60A9>contaiment breached</color>\nEveryone evacuate <color=#FF60A9>immediately!</color>", 15);
-            }
+           // List<Player> sendAttention = (from p in Player.List where p.UserId != null && p.UserId != string.Empty && p != pl select p).ToList<Player>();
+           // foreach(Player plr in sendAttention)
+           // {
+           //     plr.Broadcast("<color=red>ATTENTION!</color>\nSCP-682 has <color=#FF60A9>contaiment breached</color>\nEveryone evacuate <color=#FF60A9>immediately!</color>", 15);
+           // }
             Cassie.Send("ATTENTION TO ALL PERSONNEL . SCP 6 8 2 ESCAPE . ALL HELICOPTERS AND MOBILE TASK FORCES IMMEDIATELY MOVE FORWARD TO ALL GATES . PLEASE EVACUATE IMMEDIATELY", false, false, true);
+            
             pl.Role = RoleType.Scp93989;
             pl.Hp = ConfigManager.EasySCP682_hp;
             pl.Tag += pluginTag;
@@ -127,8 +128,8 @@ namespace SCP682
                 if (random == 1)
                 {
                     ev.Amount = ConfigManager.EasySCP682_damage;
-                } else
-                {
+                }
+                if (random == 2){
                     ev.Amount = 99;
                 }
             }
