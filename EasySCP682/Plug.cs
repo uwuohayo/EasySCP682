@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using EasySCP682;
 using Qurre;
 using Qurre.API;
+using Qurre.API.Controllers;
 using Qurre.API.Events;
 using Qurre.Events.Modules;
 using Player = Qurre.API.Player;
@@ -88,6 +89,14 @@ namespace SCP682
         }
         private void Spawn(Player pl)
         {
+            foreach (Player p in Player.List)
+            {
+                if (p != pl)
+                {
+                    p.Broadcast("<color=red>ATTENTION!</color>\nSCP-682 has <color=#FF60A9>contaiment breached</color>\nEveryone evacuate <color=#FF60A9>immediately!</color>", 15);
+                }
+            }
+            Cassie.Send("ATTENTION TO ALL PERSONNEL . SCP 6 8 2 ESCAPE . ALL HELICOPTERS AND MOBILE TASK FORCES IMMEDIATELY MOVE FORWARD TO ALL GATES . PLEASE EVACUATE IMMEDIATELY", false, false, true);
             pl.Role = RoleType.Scp93989;
             pl.Hp = ConfigManager.EasySCP682_hp;
             pl.Tag += pluginTag;
@@ -162,10 +171,8 @@ namespace SCP682
                 ev.Allowed = false;
                 try
                 {
-                    string text = string.Join(" ", ev.Args);
-                    Player player = Player.Get(text);
-                    bool flag2 = player == null;
-                    if (flag2)
+                    Player player = Player.Get(ev.Args[0]);
+                    if (player == null)
                     {
                         ev.Success = false;
                         ev.ReplyMessage = "Player not found";
