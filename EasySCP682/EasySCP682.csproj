@@ -15,11 +15,11 @@
     <None Remove="UnityEngine" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Assembly-CSharp_publicized">
-      <HintPath>..\..\..\Downloads\libs\Assembly-CSharp_publicized.dll</HintPath>
-    </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>..\..\..\Downloads\libs\Assembly-CSharp-firstpass.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp_publicized">
+      <HintPath>..\..\..\Downloads\libs\Assembly-CSharp_publicized.dll</HintPath>
     </Reference>
     <Reference Include="CommandSystem.Core">
       <HintPath>..\..\..\Downloads\libs\CommandSystem.Core.dll</HintPath>

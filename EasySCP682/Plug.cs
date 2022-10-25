@@ -79,7 +79,8 @@ namespace SCP682
                 if (list.Count >= ConfigManager.EasySCP682_minPlayers)
                 {
                     Random rnd = new Random();
-                    if (rnd.Next(1, 2) == 1)
+                    int random = rnd.Next(0, 1);
+                    if (random == 1)
                     {
                         Player pl = list[Extensions.Random.Next(list.Count)];
                         this.Spawn(pl);
@@ -89,12 +90,12 @@ namespace SCP682
         }
         private void Spawn(Player pl)
         {
-           // List<Player> sendAttention = (from p in Player.List where p.UserId != null && p.UserId != string.Empty && p != pl select p).ToList<Player>();
-           // foreach(Player plr in sendAttention)
-           // {
-           //     plr.Broadcast("<color=red>ATTENTION!</color>\nSCP-682 has <color=#FF60A9>contaiment breached</color>\nEveryone evacuate <color=#FF60A9>immediately!</color>", 15);
-           // }
-            Cassie.Send("ATTENTION TO ALL PERSONNEL . SCP 6 8 2 ESCAPE . ALL HELICOPTERS AND MOBILE TASK FORCES IMMEDIATELY MOVE FORWARD TO ALL GATES . PLEASE EVACUATE IMMEDIATELY", false, false, true);
+            List<Player> sendAttention = (from p in Player.List where p.UserId != null && p.UserId != string.Empty && p != pl select p).ToList<Player>();
+            foreach(Player plr in sendAttention)
+            {
+                plr.Broadcast(ConfigManager.EasySCP682_allBroadcast, 15);
+            }
+            Cassie.Send(ConfigManager.EasySCP682_cassie, false, false, true);
             
             pl.Role = RoleType.Scp93989;
             pl.Hp = ConfigManager.EasySCP682_hp;
@@ -102,20 +103,22 @@ namespace SCP682
             pl.CustomInfo = ConfigManager.EasySCP682_info;
             pl.Ahp = 0;
             pl.Scale = new UnityEngine.Vector3(1.2f, 1.2f, 1.2f);
-            pl.Broadcast("You are now <color=#FF60A9>SCP-682</color>\nYou are the most <color=#FF60A9>dangerous</color> object in the <color=#FF60A9>SCP Foundation</color>\nBring <color=#FF60A9>chaos</color> to this game!", 15);
+            pl.Broadcast(ConfigManager.EasySCP682_spawnBroadcast, 15);
         }
 
         private void Destroy(InteractDoorEvent ev)
         {
             if (ev.Player.Tag.Contains(pluginTag))
             {
-                if ((DateTime.Now - this.LastBreak).TotalSeconds > ConfigManager.EasySCP682_cd)
+                if ((DateTime.Now - this.LastBreak).TotalSeconds > ConfigManager.EasySCP682_doorDamageCD)
                 {
                     ev.Door.Destroyed = true;
                     this.LastBreak = DateTime.Now;
+                    return;
                 } else
                 {
-                    ev.Player.ShowHint("Wait <color=#FF60A9>" + ConfigManager.EasySCP682_cd + "</color> seconds to break the door", 2);
+                    ev.Player.ShowHint("Wait <color=#FF60A9>%doorDamageCD%</color> seconds to break the door".Replace("%doorDamageCD%", ConfigManager.EasySCP682_doorDamageCD.ToString()), 2);
+                    return;
                 }
             }
         }
@@ -123,15 +126,7 @@ namespace SCP682
         {
             if (ev.Attacker.Tag.Contains(pluginTag))
             {
-                Random rnd = new Random();
-                int random = rnd.Next(1, 2);
-                if (random == 1)
-                {
-                    ev.Amount = ConfigManager.EasySCP682_damage;
-                }
-                if (random == 2){
-                    ev.Amount = 99;
-                }
+                ev.Amount = ConfigManager.EasySCP682_damage;
             }
         }
         private void Dead(DeadEvent ev)
@@ -168,23 +163,30 @@ namespace SCP682
             {
                 ev.Prefix = "SCP682";
                 ev.Allowed = false;
-
-                try
+                if (ev.Args.Length != 1)
                 {
-                    Player player = Player.Get(ev.Args[0]);
-                    if (player == null)
+                    try
                     {
-                        ev.Success = false;
-                        ev.ReplyMessage = "Player not found";
+                        Player player = Player.Get(ev.Args[0]);
+                        if (player == null)
+                        {
+                            ev.Success = false;
+                            ev.ReplyMessage = "Player not found";
+                        }
+                        else
+                        {
+                            ev.ReplyMessage = "Successfully";
+                            Spawn(player);
+                        }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        ev.ReplyMessage = "Successfully";
-                        Spawn(player);
+                        Log.Error(ex.StackTrace);
                     }
-                } catch(Exception ex)
+                } else
                 {
-                    Log.Error(ex.StackTrace);
+                    ev.Success = false;
+                    ev.ReplyMessage = "Invalid Usage";
                 }
                 }
             }
