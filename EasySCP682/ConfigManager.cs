@@ -24,10 +24,10 @@ namespace EasySCP682
             EasySCP682_enable = Plug.Config.GetBool("EasySCP682_enable", true, "on or off EasySCP682?");
             EasySCP682_command = Plug.Config.GetString("EasySCP682_command", "scp682", "command for spawn scp682");
             EasySCP682_info = Plug.Config.GetString("EasySCP682_info", "SCP-682", "custom info for scp 682");
-            EasySCP682_hp = Plug.Config.GetInt("EasySCP682_hp", 10000, "hp for scp 682");
-            EasySCP682_doorDamageCD = Plug.Config.GetInt("EasySCP682_doorDamageCD", 20, "cd for door break in seconds");
+            EasySCP682_hp = Plug.Config.GetInt("EasySCP682_hp", 7000, "hp for scp 682");
+            EasySCP682_doorDamageCD = Plug.Config.GetInt("EasySCP682_doorDamageCD", 30, "cd for door break in seconds");
             EasySCP682_damage = Plug.Config.GetInt("EasySCP682_damage", 1000, "damage when scp 682 bite players");
-            EasySCP682_minPlayers = Plug.Config.GetInt("EasySCP682_minPlayers", 10, "min players to spawn scp 682");
+            EasySCP682_minPlayers = Plug.Config.GetInt("EasySCP682_minPlayers", 12, "min players to spawn scp 682");
 
             EasySCP682_allBroadcast = Plug.Config.GetString("EasySCP682_allBroadcast", "<color=red>ATTENTION!</color>\nSCP-682 has <color=#FF60A9>contaiment breached</color>\nEveryone evacuate <color=#FF60A9>immediately!</color>", "broadcast to all players when scp682 spawn");
             EasySCP682_cassie = Plug.Config.GetString("EasySCP682_cassie", "ATTENTION TO ALL PERSONNEL . SCP 6 8 2 ESCAPE . ALL HELICOPTERS AND MOBILE TASK FORCES IMMEDIATELY MOVE FORWARD TO ALL GATES . PLEASE EVACUATE IMMEDIATELY", "cassie when scp682 spawn");

@@ -101,6 +101,7 @@ namespace SCP682
             Cassie.Send(ConfigManager.EasySCP682_cassie, false, false, true);
             
             pl.Role = RoleType.Scp93989;
+            pl.DisableEffect(Qurre.API.Objects.EffectType.Visuals939);
             pl.Hp = ConfigManager.EasySCP682_hp;
             isSCP682.Add(pl);
             pl.CustomInfo = ConfigManager.EasySCP682_info;
