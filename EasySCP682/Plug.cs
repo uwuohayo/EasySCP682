@@ -20,8 +20,8 @@ namespace SCP682
         public override string Name => "EasySCP682";
         public override Version Version => new Version(1, 0, 0);
         public override int Priority => int.MinValue;
-        public String pluginTag => "SCP682";
         private DateTime LastBreak = DateTime.Now;
+        public static List<Player> isSCP682 = new List<Player>();
         private Plug instance;
         public Plug getInstanse()
         {
@@ -40,13 +40,14 @@ namespace SCP682
                 return;
             }
 
-            Round.Start += new Main.AllEvents(this.Started);
+            Round.Start += new Main.AllEvents(this.RoundStart);
             Qurre.Events.Player.InteractDoor += new Main.AllEvents<InteractDoorEvent>(this.Destroy);
             Qurre.Events.Player.Damage += new Main.AllEvents<DamageEvent>(this.Damage);
             Qurre.Events.Player.RoleChange += new Main.AllEvents<RoleChangeEvent>(this.Spawn);
             Qurre.Events.Player.Spawn += new Main.AllEvents<SpawnEvent>(this.Spawn);
             Qurre.Events.Player.Dead += new Main.AllEvents<DeadEvent>(this.Dead);
             Server.SendingRA += new Main.AllEvents<SendingRAEvent>(this.Ra);
+            isSCP682.Clear();
 
             Log.Info(" "+Name+" enabled :)");
             Log.Info(" version: " + Version);
@@ -57,22 +58,24 @@ namespace SCP682
         {
             instance = null;
 
-            Round.Start -= new Main.AllEvents(this.Started);
+            Round.Start -= new Main.AllEvents(this.RoundStart);
             Qurre.Events.Player.InteractDoor -= new Main.AllEvents<InteractDoorEvent>(this.Destroy);
             Qurre.Events.Player.Damage -= new Main.AllEvents<DamageEvent>(this.Damage);
             Qurre.Events.Player.RoleChange -= new Main.AllEvents<RoleChangeEvent>(this.Spawn);
             Qurre.Events.Player.Spawn -= new Main.AllEvents<SpawnEvent>(this.Spawn);
             Qurre.Events.Player.Dead -= new Main.AllEvents<DeadEvent>(this.Dead);
             Server.SendingRA -= new Main.AllEvents<SendingRAEvent>(this.Ra);
+            isSCP682.Clear();
 
             Log.Info(" " + Name + " disabled :(");
             Log.Info(" version: " + Version);
             Log.Info(" dev: "+Developer);
             Log.Info(" site: www.rootkovskiy.ovh");
         }
-        private void Started()
+        private void RoundStart()
         {
-            if ((from x in Player.List where x.Tag.Contains(pluginTag) select x).Count<Player>() == 0)
+            isSCP682.Clear();
+            if (isSCP682.Count == 0)
             {
                 List<Player> list = (from x in Player.List where x.UserId != null && x.UserId != string.Empty && !x.Overwatch select x).ToList<Player>();
 
@@ -99,7 +102,7 @@ namespace SCP682
             
             pl.Role = RoleType.Scp93989;
             pl.Hp = ConfigManager.EasySCP682_hp;
-            pl.Tag += pluginTag;
+            isSCP682.Add(pl);
             pl.CustomInfo = ConfigManager.EasySCP682_info;
             pl.Ahp = 0;
             pl.Scale = new UnityEngine.Vector3(1.2f, 1.2f, 1.2f);
@@ -108,7 +111,7 @@ namespace SCP682
 
         private void Destroy(InteractDoorEvent ev)
         {
-            if (ev.Player.Tag.Contains(pluginTag))
+            if (isSCP682.Contains(ev.Player))
             {
                 if ((DateTime.Now - this.LastBreak).TotalSeconds > ConfigManager.EasySCP682_doorDamageCD)
                 {
@@ -117,43 +120,53 @@ namespace SCP682
                     return;
                 } else
                 {
-                    ev.Player.ShowHint("Wait <color=#FF60A9>%doorDamageCD%</color> seconds to break the door".Replace("%doorDamageCD%", ConfigManager.EasySCP682_doorDamageCD.ToString()), 2);
+                    ev.Player.ShowHint(ConfigManager.EasySCP682_doorDamageHint.Replace("%doorDamageCD%", ConfigManager.EasySCP682_doorDamageCD.ToString()), 2);
                     return;
                 }
             }
         }
         private void Damage(DamageEvent ev)
         {
-            if (ev.Attacker.Tag.Contains(pluginTag))
+            if (isSCP682.Contains(ev.Attacker))
             {
-                ev.Amount = ConfigManager.EasySCP682_damage;
+                Random rnd = new Random();
+                int random = rnd.Next(0, 2);
+                if (random == 1)
+                {
+                    ev.Amount = ConfigManager.EasySCP682_damage;
+                } else
+                {
+                    ev.Amount = 99;
+                }
             }
         }
         private void Dead(DeadEvent ev)
         {
-            if (ev.Target.Tag.Contains(pluginTag))
+            if (isSCP682.Contains(ev.Target))
             {
-                ev.Target.CustomInfo = "";
-                ev.Target.Tag.Replace(pluginTag, "");
+                ev.Target.CustomInfo = null;
+                isSCP682.Remove(ev.Target);
             }
         }
         private void Spawn(RoleChangeEvent ev)
         {
-            if (ev.Player.Tag.Contains(pluginTag))
+            if (isSCP682.Contains(ev.Player))
             {
                 if (ev.NewRole != RoleType.Scp93989)
                 {
-                    ev.Player.Tag = ev.Player.Tag.Replace(pluginTag, "");
+                    ev.Player.CustomInfo = null;
+                    isSCP682.Remove(ev.Player);
                 }
             }
         }
         private void Spawn(SpawnEvent ev)
         {
-            if (ev.Player.Tag.Contains(pluginTag))
+            if (isSCP682.Contains(ev.Player))
             {
                 if (ev.RoleType != RoleType.Scp93989)
                 {
-                    ev.Player.Tag = ev.Player.Tag.Replace(pluginTag, "");
+                    ev.Player.CustomInfo = null;
+                    isSCP682.Remove(ev.Player);
                 }
             }
         }
