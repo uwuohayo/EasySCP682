@@ -176,7 +176,7 @@ namespace SCP682
             {
                 ev.Prefix = "SCP682";
                 ev.Allowed = false;
-                if (ev.Args.Length != 1)
+                if (ev.Args.Length == 1)
                 {
                     try
                     {
