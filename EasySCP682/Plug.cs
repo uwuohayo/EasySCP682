@@ -105,7 +105,6 @@ namespace SCP682
             pl.Hp = ConfigManager.EasySCP682_hp;
             isSCP682.Add(pl);
             pl.CustomInfo = ConfigManager.EasySCP682_info;
-            pl.Ahp = 0;
             pl.Scale = new UnityEngine.Vector3(1.2f, 1.2f, 1.2f);
             pl.Broadcast(ConfigManager.EasySCP682_spawnBroadcast, 15);
         }
