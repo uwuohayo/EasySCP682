@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ using Qurre.Events.Modules;
 using Player = Qurre.API.Player;
 using Round = Qurre.Events.Round;
 using Server = Qurre.Events.Server;
+using Random = UnityEngine.Random;
 
 namespace SCP682
 {
@@ -81,9 +83,7 @@ namespace SCP682
 
                 if (list.Count >= ConfigManager.EasySCP682_minPlayers)
                 {
-                    Random rnd = new Random();
-                    int random = rnd.Next(0, 1);
-                    if (random == 1)
+                    if (ConfigManager.EasySCP682_spawnChance >= Random.Range(0, 100))
                     {
                         Player pl = list[Extensions.Random.Next(list.Count)];
                         this.Spawn(pl);
@@ -93,6 +93,7 @@ namespace SCP682
         }
         private void Spawn(Player pl)
         {
+            isSCP682.Add(pl);
             List<Player> sendAttention = (from p in Player.List where p.UserId != null && p.UserId != string.Empty && p != pl select p).ToList<Player>();
             foreach(Player plr in sendAttention)
             {
@@ -103,7 +104,6 @@ namespace SCP682
             pl.Role = RoleType.Scp93989;
             pl.DisableEffect(Qurre.API.Objects.EffectType.Visuals939);
             pl.Hp = ConfigManager.EasySCP682_hp;
-            isSCP682.Add(pl);
             pl.CustomInfo = ConfigManager.EasySCP682_info;
             pl.Scale = new UnityEngine.Vector3(1.2f, 1.2f, 1.2f);
             pl.Broadcast(ConfigManager.EasySCP682_spawnBroadcast, 15);
@@ -129,15 +129,7 @@ namespace SCP682
         {
             if (isSCP682.Contains(ev.Attacker))
             {
-                Random rnd = new Random();
-                int random = rnd.Next(0, 2);
-                if (random == 1)
-                {
-                    ev.Amount = ConfigManager.EasySCP682_damage;
-                } else
-                {
-                    ev.Amount = 99;
-                }
+                ev.Amount = Random.Range(ConfigManager.EasySCP682_damageMin, ConfigManager.EasySCP682_damageMax);
             }
         }
         private void Dead(DeadEvent ev)
@@ -174,7 +166,7 @@ namespace SCP682
         {
             if (ev.Name == ConfigManager.EasySCP682_command)
             {
-                ev.Prefix = "SCP682";
+                ev.Prefix = ConfigManager.EasySCP682_Command_prefix;
                 ev.Allowed = false;
                 if (ev.Args.Length == 1)
                 {
@@ -184,11 +176,11 @@ namespace SCP682
                         if (player == null)
                         {
                             ev.Success = false;
-                            ev.ReplyMessage = "Player not found";
+                            ev.ReplyMessage = ConfigManager.EasySCP682_Command_playerNotFound;
                         }
                         else
                         {
-                            ev.ReplyMessage = "Successfully";
+                            ev.ReplyMessage = ConfigManager.EasySCP682_Command_successfully;
                             Spawn(player);
                         }
                     }
@@ -199,7 +191,7 @@ namespace SCP682
                 } else
                 {
                     ev.Success = false;
-                    ev.ReplyMessage = "Invalid Usage";
+                    ev.ReplyMessage = ConfigManager.EasySCP682_Command_invalidUsage;
                 }
                 }
             }
