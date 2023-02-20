@@ -58,7 +58,6 @@ namespace SCP682
         }
         public override void Disable()
         {
-            instance = null;
 
             Round.Start -= new Main.AllEvents(this.RoundStart);
             Qurre.Events.Player.InteractDoor -= new Main.AllEvents<InteractDoorEvent>(this.Destroy);
@@ -68,7 +67,7 @@ namespace SCP682
             Qurre.Events.Player.Dead -= new Main.AllEvents<DeadEvent>(this.Dead);
             Server.SendingRA -= new Main.AllEvents<SendingRAEvent>(this.Ra);
             isSCP682.Clear();
-
+            instance = null;
             Log.Info(" " + Name + " disabled :(");
             Log.Info(" version: " + Version);
             Log.Info(" dev: "+Developer);
@@ -86,7 +85,7 @@ namespace SCP682
                     if (ConfigManager.EasySCP682_spawnChance >= Random.Range(0, 100))
                     {
                         Player pl = list[Extensions.Random.Next(list.Count)];
-                        this.Spawn(pl);
+                        Spawn(pl);
                     }
                 }
             }
